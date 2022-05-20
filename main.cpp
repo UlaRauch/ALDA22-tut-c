@@ -46,8 +46,19 @@ void eratosthenes2(int n, int *sieve) {
 // ---------------------
 int inversionCount(int size, int *numbers, int *inversions) {
     //TODO
-
-    return 0;
+    for (int i = 0; i < size; i++) {
+        inversions[i] = 0;
+        for (int j = i + 1; j < size; ++j) {
+            if (numbers[i] > numbers[j]) {
+                inversions[i] += 1;
+            }
+        }
+    }
+    int inversions_total = 0;
+    for (int i = 0; i < size; i++) {
+        inversions_total += inversions[i];
+    }
+    return inversions_total;
 }
 
 // =====================
@@ -55,10 +66,29 @@ int inversionCount(int size, int *numbers, int *inversions) {
 // ---------------------
 void memswap(char *mem1, char *mem2, int size) {
     // TODO
-    
+    char temp;
+    for (int i = 0; i < size; ++i) {
+        temp = *(mem1+i);
+        *(mem1+i) = *(mem2+i);
+        *(mem2+i) = temp;
+    }
 }
 
-
+// =====================
+// Tools - please ignore
+// ---------------------
+void printIntArray(int *array, int size) {
+    for (int i = 0; i < size; ++i) {
+        printf("%i", *(array+i));
+    }
+    printf("\n");
+}
+void printCharArray(char *array, int size) {
+    for (int i = 0; i < size; ++i) {
+        printf("%c", *(array+i));
+    }
+    printf("\n");
+}
 
 /*
  Test your C knowledge in the main function, but leave the very last lines of code unchanged. 
@@ -69,35 +99,80 @@ int main(int argc, char *const argv[]) {
     // =====================
     // Exercise 1
     // ---------------------
-   // read some int n from the console
+    int n = 500;
+    printf("n = %i\n", n);    // read some int n from the console
     // scanf("%i", &n);
     // or simply set a variable
     // create an dynamic array with the help of malloc (also free up the memory after usage again)
+    int *sieve = (int *) malloc(sizeof(int) * (n + 1));
     //int sieve[n+1];    // or some static array
-    // call function eratosthenes...
-    // print all prime numbers up to n - 1
-       
-
+    eratosthenes(n, sieve);    // call function eratosthenes...
+    int counter = 0;
+    for (int i = 0; i < n; ++i) {   // print all prime numbers up to n - 1
+        if (*(sieve + i) == 1) {
+            printf("%i ", i);
+            counter++;
+            if (counter % 10 == 0) {
+                printf("\n");
+            }
+        }
+    }
+    free(sieve);
+    printf("\n=============");
 
     // =====================
     // Exercise 2
     // ---------------------
     // Define two arrays of equal size n
-    // Initialize one array with random ints
+    //printf("\nenter size:");
+    int size = 7;
+    //scanf("%i", &size);
+    int *numbers = (int *) malloc(sizeof(int) * size);
+    int *inversions = (int *) malloc(sizeof(int) * size);
+    for (int i = 0; i < size; ++i) {      // Initialize one array with random ints
+        *(numbers+i) = rand() % 10;
+    }
+    //printf("random numbers in array:\n");
+    /*
+    for (int i = 0; i < size; i++) {
+        scanf("%i", &numbers[i]);
+    }
+     */
     // call inversionCount and pass the parameters
     // print all inversions and the total
+    printf("\n%i inversions.\n", inversionCount(size, numbers, inversions));
+    printIntArray(numbers, size);
+    printIntArray(inversions, size);
+    free(numbers);
+    free(inversions);
+    printf("=============");
 
     // =====================
     // Exercise 3
     // ---------------------
-    // Define two arrays of equal size n
-    // The type can be any simple type
-    // fill array1
-    // fill array2
-    // Print the two arrays before memswap
-    // Call memswap
-    // Print the two arrays after memswap
-    
+    size = 8;
+    char *array1 = (char *)malloc(sizeof(char) * size);    // Define two arrays of equal size n
+    char *array2 = (char *)malloc(sizeof(char) * size);    // The type can be any simple type
+
+    for (int i = 0; i < size; ++i) {    // fill array1
+        *(array1+i) = 'a' + i;
+    }
+    for (int i = 0; i < size; ++i) {    // fill array2
+        *(array2+i) = 'A' + i;
+    }
+    printf("\nBefore:");    // Print the two arrays before memswap
+    printf("\nArray1: ");
+    printCharArray(array1, size);
+    printf("Array2: ");
+    printCharArray(array2, size);
+
+    memswap(array1, array2, size);  // Call memswap
+
+    printf("After:");    // Print the two arrays after memswap
+    printf("\nArray1: ");
+    printCharArray(array1, size);
+    printf("Array2: ");
+    printCharArray(array2, size);
 
     // DO NOT CHANGE CODE AFTER THIS LINE
     // This is where automatic testing starts, when the define macro constant is set to 1.
